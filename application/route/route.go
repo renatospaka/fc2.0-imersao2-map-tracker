@@ -21,10 +21,14 @@ type Route struct {
 }
 
 type PartialRoutePositions struct {
-	ID       string    `json: "RouteId"`
+	ID       string    `json: "routeId"`
 	ClientID string    `json: "clientId"`
 	Position []float64 `json: "position"`
 	Finished bool      `json: "finished"`
+}
+
+func NewRoute() *Route {
+	return &Route{}
 }
 
 func (r *Route) LoadPositions() error {
@@ -39,6 +43,7 @@ func (r *Route) LoadPositions() error {
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
+	x := 0
 	for scanner.Scan() {
 		data := strings.Split(scanner.Text(), ",")
 		lat, err := strconv.ParseFloat(data[0], 64)
@@ -55,7 +60,9 @@ func (r *Route) LoadPositions() error {
 			Lat:  lat,
 			Long: long,
 		})
+		x ++
 	}
+	//fmt.Println("Loaded ", x, " items.")
 
 	return nil
 }
@@ -80,5 +87,7 @@ func (r *Route) ExportJsonPositions() ([]string, error) {
 		}
 		result = append(result, string(jsonRoute))
 	}
+
+	//fmt.Println("Exported ", total, " items.")
 	return result, nil
 }

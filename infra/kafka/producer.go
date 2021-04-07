@@ -15,7 +15,6 @@ func NewKafkaProducer() *ckafka.Producer {
 	p, err := ckafka.NewProducer(configMap)
 	if err != nil {
 		log.Println(err.Error())
-		return nil
 	}
 	return p
 }
